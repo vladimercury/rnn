@@ -1,0 +1,28 @@
+input:
+  users:
+    - "data/LDAP/2009-12.csv"
+    - "data/LDAP/2010-01.csv"
+    - "data/LDAP/2010-02.csv"
+    - "data/LDAP/2010-03.csv"
+    - "data/LDAP/2010-04.csv"
+    - "data/LDAP/2010-05.csv"
+    - "data/LDAP/2010-06.csv"
+    - "data/LDAP/2010-07.csv"
+    - "data/LDAP/2010-08.csv"
+    - "data/LDAP/2010-09.csv"
+    - "data/LDAP/2010-10.csv"
+    - "data/LDAP/2010-11.csv"
+    - "data/LDAP/2010-12.csv"
+    - "data/LDAP/2011-01.csv"
+    - "data/LDAP/2011-02.csv"
+    - "data/LDAP/2011-03.csv"
+    - "data/LDAP/2011-04.csv"
+    - "data/LDAP/2011-05.csv"
+  logon: "data/logon.csv"
+  http: "data/http.csv"
+preproc:
+  users: "preproc/users.csv"
+  http: "preproc/http"
+  logon: "preproc/logon"
+other:
+  sites: "preproc/sites.csv"
