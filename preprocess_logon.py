@@ -14,11 +14,11 @@ def load_logon_info(logon_file_name):
         csv_reader = csv.reader(file, delimiter=",", quotechar='"')
         for csv_row in csv_reader:
             if len(csv_row) >= 5:
-                _, logon_date, logon_user, __, logon_state, *logon_extra = csv_row
+                _, logon_date, logon_user, logon_device, logon_state, *logon_extra = csv_row
                 logon_user_id = logon_user.split("/")[-1]
                 if logon_user_id not in logon_dict:
                     logon_dict[logon_user_id] = list()
-                logon_dict[logon_user_id].append((logon_date, logon_state))
+                logon_dict[logon_user_id].append((logon_date, logon_device, logon_state))
     print("OK")
     return logon_dict
 

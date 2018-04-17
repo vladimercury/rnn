@@ -2,46 +2,46 @@ from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, GRU
+from keras.layers import LSTM, Dense, GRU, SimpleRNN
 import matplotlib.pyplot as plt
 import math
 import csv
 import numpy
 
-# DEFINES
+# НАСТРОЙКИ
 
-# % of train data from all data
-TRAIN_PERCENTAGE = 0.8
+TRAIN_PERCENTAGE = 0.8  # Доля обучающего множества во всем датасете
+LOOK_BACK = 1  # Величина сдвига
+DATA_SET_SIZE = 50  # Максимальный размер датасета, None если неограничено
+ITERATIONS = 100  # Число итераций обучения
+SAVE_TO_FILE = False  # Сохранять ли графики в файл
 
-# look back for how many steps
-LOOK_BACK = 1
+INPUT_FILE_NAME = "parsed/users/AAA0371.csv"  # Входной файл
 
-# truncate dataset for faster computing
-DATA_SET_SIZE = 50
+# ИСПОЛЬЗУЕМАЯ МОДЕЛЬ
 
-# used model
 MODEL = LSTM
 # MODEL = GRU
-
-# number of training iterations
-ITERATIONS = 100
-
-# saving graphs to file
-SAVE_TO_FILE = False
-
-# PROGRAM
+# MODEL = SimpleRNN
 
 
 def read_data():
-    with open("preproc/logon/AAA0371.csv") as file:
+    pc_dict = dict()
+    pc_counter = 1
+    with open(INPUT_FILE_NAME) as file:
         logon_data = list()
         csv_reader = csv.reader(file)
+        first_row = True
         for csv_row in csv_reader:
-            if len(csv_row) >= 2:
-                logon_date_str, logon_state_str, *extra = csv_row
-                logon_date = datetime.strptime(logon_date_str, "%m/%d/%Y %H:%M:%S")
-                logon_state = 1 if logon_state_str == "Logon" else 0
-                logon_data.append((logon_date.day, logon_date.hour, logon_state))
+            if not first_row:
+                if len(csv_row) >= 8:
+                    day, mon, year, hrs, mins, sec, pc, logon, *extra = csv_row
+                    if pc not in pc_dict:
+                        pc_dict[pc] = pc_counter
+                        pc_counter += 1
+                    logon_data.append((int(hrs), pc_dict[pc], int(logon)))
+            else:
+                first_row = False
         return logon_data
 
 
@@ -68,6 +68,7 @@ model.add(MODEL(4, input_shape=(1, shape)))
 model.add(Dense(shape))
 model.compile(loss='mean_squared_error', optimizer='adam')
 model.fit(train_x, train_y, epochs=ITERATIONS, batch_size=1, verbose=3)
+
 
 train_predict = model.predict(train_x)
 test_predict = model.predict(test_x)
