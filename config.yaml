@@ -1,0 +1,16 @@
+input:
+  file_name: "parsed/users/AAA0371.csv"   # Path to the input file
+  lines_in_file: 843                      # Number of lines with valuable data in input file
+  max_chunk_size: 500                     # Maximum size of input chunk size (useful for large files)
+  train_set_percentage: 90                # Percent rate of the train set
+input_vector:
+# - "weekday"
+  - "hour"
+  - "pc"
+  - "logon"
+model:
+  type: "lstm" # "gru" "rnn"
+  dir: "models/"
+  look_back: 1
+  iterations: 5
+  metric: "r2" # "mse"

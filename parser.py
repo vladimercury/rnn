@@ -20,6 +20,4 @@ with open(OUTPUT_DIR + USER_NAME + ".csv", "w") as output:
             if len(row) >= 5:
                 _, date_str, user, pc, state, *extra = row
                 if user.endswith(USER_NAME):
-                    date = datetime.strptime(date_str, "%m/%d/%Y %H:%M:%S")
-                    csv_writer.writerow((date.day, date.month, date.year, date.hour,
-                                         date.minute, date.second, regex.sub("", pc), int(state == "Logon")))
+                    csv_writer.writerow((date_str, regex.sub("", pc), int(state == "Logon")))
