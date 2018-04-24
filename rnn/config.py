@@ -1,6 +1,7 @@
 from keras.layers import LSTM, GRU, SimpleRNN
 from sklearn.metrics import r2_score, mean_squared_error
 import yaml
+import os
 
 model_types = {
     "lstm": LSTM,
@@ -33,6 +34,11 @@ class Config:
         if metric_type_name in metric_types:
             self.__metric_type = metric_types[metric_type_name]
         self.__metric_name = metric_type_name
+
+        try:
+            os.makedirs(self.__model["dir"])
+        except FileExistsError:
+            pass
 
     @staticmethod
     def _safe_get(container: dict, key: str, default_value):
@@ -70,7 +76,7 @@ class Config:
 
     @property
     def model_file_name(self):
-        return self.__model["dir"] + self.__model_name + ".h5"
+        return self.__model["dir"] + "/" + self.__model_name + ".h5"
 
     @property
     def look_back_shift(self):
@@ -90,4 +96,4 @@ class Config:
 
     @property
     def stat_file_name(self):
-        return self.__model["dir"] + self.__model_name + "-stat.csv"
+        return self.__model["dir"] + "/" + self.__model_name + "-stat.csv"

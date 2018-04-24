@@ -1,4 +1,32 @@
-`preproc-*` files are used to preprocess logs stored in `data/` directory and which paths are provided in `files.yaml` file
-`network.py` is the file that runs the network
+# Установка
 
-`requirements.txt` contains project requirements, open this file in `PyCharm` and click `Install requirements` if they are not satisfied
+* Установить `Python 3.6+` и `PyCharm`
+* В `PyCharm` сделать `Checkout from version control` и использовать URL [https://github.com/vladimercury/rnn](https://github.com/vladimercury/rnn)
+* Выбрать интерпретатор Python при создании проекта или в уже созданном через `File > Settings > Project > Python Interpreter`
+* В созданном проекте открыть `requirements.txt` и установить зависимости через появившееся уведомление (долго)
+
+# Подготовка датасета
+
+* Распаковать из датасета файл `logon.csv`
+* Положить файл `logon.csv` куда-нибудь в папку с проектом
+* Изменить файл `parse.yaml` (конфигурация парсера)
+  * `input_file_name` = относительный путь к файлу с `logon.csv`
+  * `output_dir` = имя папки, в которую записать данные (создается автоматически)
+* Запустить `parser.py` - он выберет пользователя с наибольшим числом действий и создаст соответствующий файл
+* `parser.py` выдаст путь к *сохраненному файлу* `Saved to ...` и *число строк* в нем `Lines number` - эта инфа еще понадобится
+
+# Конфигурация сети
+
+* Редактируем `config.yaml`
+  * `input`
+    * `file_name` - пишем путь к сохраненному файлу
+    * `lines_in_file` - пишем число строк в файле
+  * `model`
+    * `type` - можно менять тип модели `lstm` `gru` или `rnn`
+    * `dir` - папка, куда сохранять модель и статистику
+    * `iterations` - число итераций обучения, влияет на продолжительность выполнения. Можно сделать много за один раз (1000+), а можно запускать много раз понемногу (50-100)
+
+# Запуск
+
+* Папка, указанная в `model/dir` должна быть пуста перед началом всей работы. Туда будут сохраняться модели и статистика. Модели нужны для продолжения обучения той же сети. Статистика нужна, чтобы видеть качество обучения.
+* Запускаем `run.py`, после обучения сеть сохраняется в указанной в `model/dir` папке с именем <тип модели>.h5. Усли существует такой файл, то при каждом запуске используется сохраненная модель. 
