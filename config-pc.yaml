@@ -1,0 +1,15 @@
+input:
+  file_name: "parsed/KEE0997.csv"   # Path to the input file
+  lines_in_file: 4942                    # 5110 - CGM, 843 - AAA, 4942 - KEE0997
+  max_chunk_size: 4942                     # Maximum size of input chunk size (useful for large files)
+  train_set_percentage: 90                # Percent rate of the train set
+input_vector:
+  - "pc"
+model:
+  type: "gru" # "gru" "rnn"
+  dir: "pc/KEE0997"
+  look_back: 1
+  iterations: 5
+  metric: "r2"
+  round: 0
+  transform: 1

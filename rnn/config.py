@@ -1,7 +1,10 @@
 from keras.layers import LSTM, GRU, SimpleRNN
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error, accuracy_score, explained_variance_score, f1_score
 import yaml
 import os
+
+def f1_wrapper(y_true, y_pred):
+    return f1_score(y_true, y_pred, average='micro')
 
 model_types = {
     "lstm": LSTM,
@@ -11,7 +14,10 @@ model_types = {
 
 metric_types = {
     "r2": r2_score,
-    "mse": mean_squared_error
+    "mse": mean_squared_error,
+    "acc": accuracy_score,
+    "evs": explained_variance_score,
+    "f1": f1_wrapper
 }
 
 
@@ -34,6 +40,9 @@ class Config:
         if metric_type_name in metric_types:
             self.__metric_type = metric_types[metric_type_name]
         self.__metric_name = metric_type_name
+
+        self.__round = True if self.__model["round"] else False
+        self.__transform = True if self.__model["transform"] else False
 
         try:
             os.makedirs(self.__model["dir"])
@@ -79,6 +88,10 @@ class Config:
         return self.__model["dir"] + "/" + self.__model_name + ".h5"
 
     @property
+    def model_file_name_h(self):
+        return self.__model["dirh"] + "/" + self.__model_name + ".h5"
+
+    @property
     def look_back_shift(self):
         return self._safe_get(self.__model, "look_back", 1)
 
@@ -95,5 +108,19 @@ class Config:
         return self.__metric_name
 
     @property
+    def classification_score(self):
+        if self.__metric_type == accuracy_score or self.__metric_type == f1_score:
+            return True
+        return False
+
+    @property
     def stat_file_name(self):
-        return self.__model["dir"] + "/" + self.__model_name + "-stat.csv"
+        return self.__model["dir"] + "/" + self.__model_name + "-stat-" + self.__metric_name + ".csv"
+
+    @property
+    def round(self):
+        return self.__round
+
+    @property
+    def transform(self):
+        return self.__transform

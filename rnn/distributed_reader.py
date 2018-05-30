@@ -65,3 +65,6 @@ class DistributedReader:
         while chunk is not None:
             yield chunk
             chunk = self.next_chunk()
+
+    def stat(self):
+        return self.__current_chunk_index, self.__chunk_no
